@@ -1,6 +1,7 @@
 /* eslint-disable react/no-unescaped-entities */
 // import core package
 import React from "react";
+import Link from "next/link";
 import Image from "next/image";
 
 // import images
@@ -14,7 +15,7 @@ const AboutUs = () => {
   return (
     <section
       id="about-us"
-      className="py-16 lg:pt-32 lg:pb-24 md:py-20  px-4 sm:px-6 lg:px-8"
+      className="py-16 md:py-20  px-4 sm:px-6 lg:px-8"
     >
       <div className="mx-auto max-w-[1146px]  grid grid-cols-1 gap-10 md:gap-20 md:grid-cols-2 items-center">
         <div className="rounded-2xl overflow-hidden">
@@ -45,7 +46,9 @@ const AboutUs = () => {
           </Typography>
 
           <div className="mt-10">
-            <BtnPrimary variant="secondary" content="Join Now" />
+            <Link href="/signup">
+              <BtnPrimary variant="secondary" content="Join Now" />
+            </Link>
           </div>
         </div>
       </div>

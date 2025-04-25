@@ -108,6 +108,9 @@ html {
 }
 
 
+.swiper-wrapper {
+  align-items: start !important;
+}
 
 .hero .swiper-horizontal>.swiper-pagination-bullets,
 .swiper-pagination-bullets.swiper-pagination-horizontal {

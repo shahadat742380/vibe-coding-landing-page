@@ -59,7 +59,7 @@ const JoinSection = () => {
   ];
 
   return (
-    <section className="py-16 lg:py-24 px-4 sm:px-6 lg:px-8 bg-white">
+    <section className="py-16 lg:py-20 px-4 sm:px-6 lg:px-8 bg-white">
       <div className="max-w-7xl mx-auto">
         <HeadSection
           title="Who Should Join?"

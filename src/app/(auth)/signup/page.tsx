@@ -1,19 +1,70 @@
 /* eslint-disable react/no-unescaped-entities */
 "use client";
+
+// import core packages
+import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+
+// import form packages
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+// import images
 import signupImage from "@/assets/images/auth/signup.webp";
 import { Logo } from "@/assets/svg";
+
+// import ui
 import { Typography } from "@/components/ui/Typography";
-import { ChevronLeft } from "react-feather";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useRouter } from "next/navigation";
+import { ChevronLeft } from "react-feather";
+
+// Define validation schema using Zod
+const signUpSchema = z.object({
+  name: z.string().min(2, { message: "Name must be at least 2 characters" }),
+  email: z.string().email({ message: "Please enter a valid email address" }),
+  phone: z.string().min(10, { message: "Please enter a valid phone number" }),
+  password: z
+    .string()
+    .min(8, { message: "Password must be at least 8 characters" }),
+  terms: z.boolean().refine((val) => val === true, {
+    message: "You must agree to the terms and conditions",
+  }),
+});
+
+// Type inference from the schema
+type SignUpFormValues = z.infer<typeof signUpSchema>;
 
 export default function SignUp() {
   const router = useRouter();
+  const [showPassword, setShowPassword] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    setValue,
+    watch,
+  } = useForm<SignUpFormValues>({
+    resolver: zodResolver(signUpSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      phone: "",
+      password: "",
+      terms: false,
+    },
+    mode: "onChange",
+  });
+
+  // Watch the terms field value
+  const termsChecked = watch("terms");
+
+  const onSubmit = async (data: SignUpFormValues) => {
+    // You can handle registration logic here
+    console.log(data);
     router.push("/signin");
   };
 
@@ -62,7 +113,7 @@ export default function SignUp() {
             </div>
 
             <div className="bg-white py-8 px-6 shadow-sm rounded-xl">
-              <form className="space-y-5" onSubmit={handleSubmit}>
+              <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
                 <div>
                   <Typography
                     variant="Medium_H6"
@@ -72,12 +123,18 @@ export default function SignUp() {
                   </Typography>
                   <input
                     id="name"
-                    name="name"
                     type="text"
-                    required
-                    className="appearance-none block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none border-stroke focus:ring-2 focus:ring-primary focus:border-transparent"
+                    className={`appearance-none block w-full px-4 py-3 border rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent ${
+                      errors.name ? "border-red-500" : "border-stroke"
+                    }`}
                     placeholder="Enter your full name"
+                    {...register("name")}
                   />
+                  {errors.name && (
+                    <p className="mt-1 text-sm text-red-600">
+                      {errors.name.message}
+                    </p>
+                  )}
                 </div>
 
                 <div>
@@ -89,13 +146,19 @@ export default function SignUp() {
                   </Typography>
                   <input
                     id="email"
-                    name="email"
                     type="email"
                     autoComplete="email"
-                    required
-                    className="appearance-none block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none border-stroke focus:ring-2 focus:ring-primary focus:border-transparent"
+                    className={`appearance-none block w-full px-4 py-3 border rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent ${
+                      errors.email ? "border-red-500" : "border-stroke"
+                    }`}
                     placeholder="Enter your email"
+                    {...register("email")}
                   />
+                  {errors.email && (
+                    <p className="mt-1 text-sm text-red-600">
+                      {errors.email.message}
+                    </p>
+                  )}
                 </div>
 
                 <div>
@@ -107,12 +170,18 @@ export default function SignUp() {
                   </Typography>
                   <input
                     id="phone"
-                    name="phone"
                     type="tel"
-                    required
-                    className="appearance-none block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none border-stroke focus:ring-2 focus:ring-primary focus:border-transparent"
+                    className={`appearance-none block w-full px-4 py-3 border rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent ${
+                      errors.phone ? "border-red-500" : "border-stroke"
+                    }`}
                     placeholder="Enter your phone number"
+                    {...register("phone")}
                   />
+                  {errors.phone && (
+                    <p className="mt-1 text-sm text-red-600">
+                      {errors.phone.message}
+                    </p>
+                  )}
                 </div>
 
                 <div>
@@ -125,15 +194,17 @@ export default function SignUp() {
                   <div className="relative">
                     <input
                       id="password"
-                      name="password"
-                      type="password"
+                      type={showPassword ? "text" : "password"}
                       autoComplete="new-password"
-                      required
-                      className="appearance-none block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none border-stroke focus:ring-2 focus:ring-primary focus:border-transparent"
+                      className={`appearance-none block w-full px-4 py-3 border rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent ${
+                        errors.password ? "border-red-500" : "border-stroke"
+                      }`}
                       placeholder="Create password"
+                      {...register("password")}
                     />
                     <button
                       type="button"
+                      onClick={() => setShowPassword(!showPassword)}
                       className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400"
                     >
                       <svg
@@ -160,19 +231,44 @@ export default function SignUp() {
                       </svg>
                     </button>
                   </div>
+                  {errors.password && (
+                    <p className="mt-1 text-sm text-red-600">
+                      {errors.password.message}
+                    </p>
+                  )}
                 </div>
 
                 <div className="flex items-center cursor-pointer pt-2 gap-2">
-                  <Checkbox id="terms" name="terms" required />
-                  <label htmlFor="terms" className="cursor-pointer">
-                    <Typography
-                      variant="Regular_H6"
-                      className="text-black_"
-                    >
+                  <div className="flex items-start">
+                    <Checkbox
+                      id="terms"
+                      checked={termsChecked}
+                      onCheckedChange={(checked) => {
+                        setValue("terms", checked === true, {
+                          shouldValidate: true,
+                          shouldDirty: true,
+                          shouldTouch: true,
+                        });
+                      }}
+                    />
+                  </div>
+                  <div
+                    className="cursor-pointer"
+                    onClick={() => {
+                      const newValue = !termsChecked;
+                      setValue("terms", newValue, {
+                        shouldValidate: true,
+                        shouldDirty: true,
+                        shouldTouch: true,
+                      });
+                    }}
+                  >
+                    <Typography variant="Regular_H6" className="text-black_">
                       I agree to the{" "}
                       <Link
                         href="#"
                         className="text-primary hover:text-primary-dark"
+                        onClick={(e) => e.stopPropagation()}
                       >
                         Terms of Service
                       </Link>{" "}
@@ -180,19 +276,26 @@ export default function SignUp() {
                       <Link
                         href="#"
                         className="text-primary hover:text-primary-dark"
+                        onClick={(e) => e.stopPropagation()}
                       >
                         Privacy Policy
                       </Link>
                     </Typography>
-                  </label>
+                  </div>
                 </div>
+                {errors.terms && !termsChecked && (
+                  <p className="mt-1 text-sm text-red-600">
+                    {errors.terms.message}
+                  </p>
+                )}
 
                 <button
                   type="submit"
+                  disabled={isSubmitting}
                   className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-white bg-primary hover:bg-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
                 >
                   <Typography variant="Medium_H6" disableSelect={true}>
-                    Create Account
+                    {isSubmitting ? "Creating Account..." : "Create Account"}
                   </Typography>
                 </button>
               </form>

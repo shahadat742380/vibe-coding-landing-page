@@ -57,7 +57,7 @@ const Testimonials = () => {
     },
   ];
   return (
-    <section id="success-stories" className="py-16 md:py-20 lg:py-25 bg-light_green px-4 sm:px-6 lg:px-8 ">
+    <section id="success-stories" className="py-16 md:pt-20 md:pb-24  bg-light_green px-4 sm:px-6 lg:px-8 ">
       <div className="mx-auto max-w-7xl ">
        <HeadSection title="Success Stories" subtitle="Lorem ipsum dolor sit amet consectetur. Ut vitae." />
         <div className="mt-10 md:mt-12  lg:mt-16">
@@ -82,14 +82,14 @@ const Testimonials = () => {
               }}
               loop
               modules={[Pagination, Autoplay]}
-              autoplay={{
-                disableOnInteraction: true,
-              }}
-              className="!static"
+              // autoplay={{
+              //   disableOnInteraction: true,
+              // }}
+              className="!static !grid !items-start "
             >
               {content.map((obj, idx) => (
-                <SwiperSlide key={idx}>
-                  <div className="bg-white duration-500 cursor-pointer rounded-2xl hover:shadow-lg overflow-hidden border border-stroke p-8">
+                <SwiperSlide key={idx} className="h-full">
+                  <div className="bg-white duration-500 cursor-pointer rounded-2xl  h-full border-stroke border p-8">
                     <div className="flex flex-col justify-between flex-1 ">
                       <div className="flex-1">
                         <div className="flex gap-1.5 items-center">

@@ -42,7 +42,7 @@ const CoursesSection = () => {
   return (
     <section
       id="courses"
-      className="py-16 lg:pt-32 lg:pb-24 md:py-20 px-4 sm:px-6 lg:px-8"
+      className="py-16  md:py-20 px-4 sm:px-6 lg:px-8"
     >
       <div className="max-w-7xl mx-auto">
         <HeadSection

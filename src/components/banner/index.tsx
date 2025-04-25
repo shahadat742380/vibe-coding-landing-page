@@ -8,14 +8,10 @@ import bg from "@/assets/images/banner/banner.webp";
 
 // import component
 import { Typography } from "@/components/ui/Typography";
-
-// import jotai
-import { useSetAtom } from "jotai";
-import { openModalAtom } from "@/app/jotaiStore";
 import BtnPrimary from "../ui/BtnPrimary";
+import Link from "next/link";
 
 const Banner = () => {
-  const setOpenModal = useSetAtom(openModalAtom);
 
   return (
     <section className="relative overflow-hidden bg-black py-10 sm:py-16 lg:py-24 xl:py-32 px-4 sm:px-6 lg:px-8">
@@ -46,8 +42,12 @@ const Banner = () => {
           </Typography>
 
           <div className="mt-10 flex gap-4">
-            <BtnPrimary content="Get Started Now" className="bg-white text-primary" />
-            <BtnPrimary variant="secondary" content="Browse Courses" className="text-white border-white" />
+            <Link href="/signup">
+              <BtnPrimary content="Get Started Now" className="bg-white text-primary" />
+            </Link>
+            <Link href="#courses">
+              <BtnPrimary variant="secondary" content="Browse Courses" className="text-white border-white" />
+            </Link>
           </div>
         </div>
       </div>

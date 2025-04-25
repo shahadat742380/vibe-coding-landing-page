@@ -1,19 +1,58 @@
 /* eslint-disable react/no-unescaped-entities */
 "use client";
+
+// import core packages
+import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+
+// import form packages
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+// import images
 import signinImage from "@/assets/images/auth/signin.webp";
 import { Logo } from "@/assets/svg";
+
+// import ui
 import { Typography } from "@/components/ui/Typography";
-import { ArrowLeft, ChevronLeft } from "react-feather";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useRouter } from "next/navigation";
+import {  ChevronLeft } from "react-feather";
+
+// Define validation schema using Zod
+const signInSchema = z.object({
+  email: z.string().email({ message: "Please enter a valid email address" }),
+  password: z
+    .string()
+    .min(8, { message: "Password must be at least 8 characters" }),
+  rememberMe: z.boolean().optional(),
+});
+
+// Type inference from the schema
+type SignInFormValues = z.infer<typeof signInSchema>;
 
 export default function SignIn() {
   const router = useRouter();
+  const [showPassword, setShowPassword] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<SignInFormValues>({
+    resolver: zodResolver(signInSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+      rememberMe: false,
+    },
+  });
+
+  const onSubmit = async (data: SignInFormValues) => {
+    // You can handle authentication logic here
+    console.log(data);
     router.push("/dashboard");
   };
 
@@ -21,7 +60,13 @@ export default function SignIn() {
     <div className="min-h-screen flex">
       {/* Left Section - Illustration */}
       <div className="hidden lg:block lg:w-1/2 relative">
-        <Image src={signinImage} alt="signin" placeholder="blur" fill className="object-cover" />
+        <Image
+          src={signinImage}
+          alt="signin"
+          placeholder="blur"
+          fill
+          className="object-cover"
+        />
       </div>
 
       {/* Right Section - Sign In Form */}
@@ -56,7 +101,7 @@ export default function SignIn() {
             </div>
 
             <div className="bg-white py-8 px-6 shadow-sm rounded-xl">
-              <form className="space-y-5" onSubmit={handleSubmit}>
+              <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
                 <div>
                   <Typography
                     variant="Medium_H6"
@@ -66,13 +111,19 @@ export default function SignIn() {
                   </Typography>
                   <input
                     id="email"
-                    name="email"
                     type="email"
                     autoComplete="email"
-                    required
-                    className="appearance-none block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none border-stroke focus:ring-2 focus:ring-primary focus:border-transparent"
+                    className={`appearance-none block w-full px-4 py-3 border rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent ${
+                      errors.email ? "border-red-500" : "border-stroke"
+                    }`}
                     placeholder="Enter email"
+                    {...register("email")}
                   />
+                  {errors.email && (
+                    <p className="mt-1 text-sm text-red-600">
+                      {errors.email.message}
+                    </p>
+                  )}
                 </div>
 
                 <div>
@@ -85,15 +136,17 @@ export default function SignIn() {
                   <div className="relative">
                     <input
                       id="password"
-                      name="password"
-                      type="password"
+                      type={showPassword ? "text" : "password"}
                       autoComplete="current-password"
-                      required
-                      className="appearance-none block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none border-stroke focus:ring-2 focus:ring-primary focus:border-transparent"
+                      className={`appearance-none block w-full px-4 py-3 border rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent ${
+                        errors.password ? "border-red-500" : "border-stroke"
+                      }`}
                       placeholder="Password (min. 8 character)"
+                      {...register("password")}
                     />
                     <button
                       type="button"
+                      onClick={() => setShowPassword(!showPassword)}
                       className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400"
                     >
                       <svg
@@ -120,12 +173,17 @@ export default function SignIn() {
                       </svg>
                     </button>
                   </div>
+                  {errors.password && (
+                    <p className="mt-1 text-sm text-red-600">
+                      {errors.password.message}
+                    </p>
+                  )}
                 </div>
 
                 <div className="flex items-center justify-between pt-2">
                   <div className="flex items-center cursor-pointer">
-                    <Checkbox id="remember-me" name="remember-me" />
-                    <label htmlFor="remember-me">
+                    <Checkbox id="rememberMe" {...register("rememberMe")} />
+                    <label htmlFor="rememberMe">
                       <Typography
                         variant="Regular_H6"
                         className="ml-2 text-black_ "
@@ -147,10 +205,11 @@ export default function SignIn() {
 
                 <button
                   type="submit"
+                  disabled={isSubmitting}
                   className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-white bg-primary hover:bg-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
                 >
                   <Typography variant="Medium_H6" disableSelect={true}>
-                    Sign in
+                    {isSubmitting ? "Signing in..." : "Sign in"}
                   </Typography>
                 </button>
               </form>
