@@ -1,0 +1,132 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@layer components {
+
+
+  .clinicBg {
+    background-image: url(../assets/images/clinic/clinicBg.png);
+  }
+
+
+}
+
+/* phone input */
+
+.react-tel-input {
+  font-family: inherit !important;
+}
+
+.form-control {
+  border: 1px solid #E3E3E3 !important;
+  border-radius: 8px !important;
+  padding-left: 70px !important;
+  width: 100% !important;
+  height: 50px !important;
+  font-size: 16px !important;
+}
+
+.form-control:focus {
+  border: 2px solid rgb(30, 136, 299);
+}
+
+.flag-dropdown {
+  background: none !important;
+  border-radius: 0 !important;
+  border: 0 !important;
+  left: 16px !important;
+  top: -5px !important;
+}
+
+.swiper-wrapper {
+  align-items: center !important;
+}
+
+
+.wave-shape {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  line-height: 0;
+  transform: rotate(180deg);
+}
+
+.wave-shape svg {
+  position: relative;
+  display: block;
+  width: calc(100% + 1.3px);
+  height: 94px;
+}
+
+.wave-shape .shape-fill {
+  fill: #FFFFFF;
+}
+
+
+
+/* Swiper bullet */
+
+.hero .swiper-pagination-bullet {
+  background-color: #AEAEAE;
+  opacity: 1 !important;
+}
+
+.testimonials .swiper-pagination-bullet {
+  background-color: #AEAEAE !important;
+  width: 32px !important;
+  border-radius: 0px !important;
+  height: 4px !important;
+  opacity: 1 !important;
+}
+
+.testimonials .swiper-pagination-bullet-active {
+  border-radius: 0px !important;
+  background-color: #0D8079 !important;
+  width: 32px !important;
+  height: 4px !important;
+}
+
+.hero .swiper-pagination-bullet-active {
+  width: 25px !important;
+  border-radius: 16px !important;
+  background-color: #0D8079 !important;
+  width: 25px !important;
+  border-radius: 16px !important;
+}
+
+
+
+.hero .swiper-horizontal>.swiper-pagination-bullets,
+.swiper-pagination-bullets.swiper-pagination-horizontal {
+  bottom: 20px !important;
+}
+
+.testimonials .swiper-horizontal>.swiper-pagination-bullets,
+.swiper-pagination-bullets.swiper-pagination-horizontal {
+  bottom: -40px !important;
+}
+
+@media screen and (max-width: 767px) {
+
+  .hero .swiper-horizontal>.swiper-pagination-bullets,
+  .swiper-pagination-bullets.swiper-pagination-horizontal {
+    bottom: 0px !important;
+  }
+
+  .hero .swiper-pagination-bullet-active {
+    background-color: #fff !important;
+  }
+}
